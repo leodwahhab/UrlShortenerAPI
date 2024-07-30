@@ -21,5 +21,5 @@ public class UrlModel {
     private String shortenedUrl;
     private String originalUrl;
     private LocalDateTime creationDate;
-    private LocalDateTime lastClickedDate;
+    private LocalDateTime lastClickDate;
 }
