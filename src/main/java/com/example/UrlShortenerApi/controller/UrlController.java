@@ -23,9 +23,7 @@ public class UrlController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new UrlDTO(
                 shortUrl,
-                urlModel.getOriginalUrl(),
-                urlModel.getCreationDate(),
-                urlModel.getLastClickDate()
+                urlModel.getOriginalUrl()
         ));
     }
 }
