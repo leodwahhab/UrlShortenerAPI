@@ -18,7 +18,7 @@ public class UrlModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String shortenedUrl;
+    private String shortUrl;
     private String originalUrl;
     private LocalDateTime creationDate;
     private LocalDateTime lastClickDate;

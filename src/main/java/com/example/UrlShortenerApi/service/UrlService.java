@@ -1,7 +1,10 @@
 package com.example.UrlShortenerApi.service;
 
+import com.example.UrlShortenerApi.domain.UrlModel;
+import com.example.UrlShortenerApi.domain.dto.UrlDTO;
+
 public interface UrlService {
-    String generateShortUrl(String originalUrl);
+    UrlModel GenerateShortUrl(String originalUrl);
 
     void GetShortUrl();
 }
