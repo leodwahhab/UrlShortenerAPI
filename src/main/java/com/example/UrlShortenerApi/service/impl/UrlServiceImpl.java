@@ -1,20 +1,14 @@
 package com.example.UrlShortenerApi.service.impl;
 
 import com.example.UrlShortenerApi.domain.UrlModel;
-import com.example.UrlShortenerApi.domain.dto.UrlDTO;
 import com.example.UrlShortenerApi.repository.UrlRepository;
 import com.example.UrlShortenerApi.service.UrlService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Service
 public class UrlServiceImpl implements UrlService {
     @Autowired
@@ -44,7 +38,9 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public void GetShortUrl() {
-
+    public String getOriginalUrl(String shortUrl) {
+        String originalUrl = urlRepository.findByShortUrl(shortUrl).getOriginalUrl();
+        System.out.println(originalUrl);
+        return originalUrl;
     }
 }
