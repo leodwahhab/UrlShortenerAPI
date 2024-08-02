@@ -4,6 +4,7 @@ import com.example.UrlShortenerApi.domain.UrlModel;
 import com.example.UrlShortenerApi.domain.dto.UrlDTO;
 import com.example.UrlShortenerApi.service.UrlService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class UrlController {
     UrlService urlService;
 
     @PostMapping()
-    public ResponseEntity<UrlDTO> generateShortUrl(@RequestParam String originalUrl) {
+    public ResponseEntity<UrlDTO> generateShortUrl(@PathParam("url") String originalUrl) {
         UrlModel urlModel = urlService.GenerateShortUrl(originalUrl);
         String domainUrl = "http://localhost:8080/url/";
         String shortUrl = domainUrl + urlModel.getShortUrl();

@@ -8,22 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UrlServiceImpl implements UrlService {
     @Autowired
     UrlRepository urlRepository;
 
-    //TODO generate a new short Url
-    //the new URL must length 5 to 10 char
-    //validate if the generated URL doesn't exist
     @Override
     public UrlModel GenerateShortUrl(String originalUrl) {
+        if(!validateUrl(originalUrl))
+            throw new IllegalArgumentException();
+
         String newShortUrl;
 
         do {
             newShortUrl = generateShortUrl();
-        } while (urlRepository.findByShortUrl(newShortUrl) != null);
+        } while (urlRepository.findByShortUrl(newShortUrl).isPresent());
 
         UrlModel url = new UrlModel();
         url.setOriginalUrl(originalUrl);
@@ -33,14 +36,22 @@ public class UrlServiceImpl implements UrlService {
         return urlRepository.save(url);
     }
 
-    private String generateShortUrl() {
-        return RandomStringUtils.randomAlphanumeric(5, 10);
-    }
-
     @Override
     public String getOriginalUrl(String shortUrl) {
-        String originalUrl = urlRepository.findByShortUrl(shortUrl).getOriginalUrl();
-        System.out.println(originalUrl);
-        return originalUrl;
+        return urlRepository.findByShortUrl(shortUrl)
+                .orElseThrow(NoSuchElementException::new)
+                .getOriginalUrl();
+    }
+
+    private boolean validateUrl(String url) {
+        String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+
+        return matcher.find();
+    }
+
+    private String generateShortUrl() {
+        return RandomStringUtils.randomAlphanumeric(5, 10);
     }
 }
