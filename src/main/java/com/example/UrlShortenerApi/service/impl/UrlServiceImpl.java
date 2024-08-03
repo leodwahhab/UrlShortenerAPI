@@ -19,6 +19,9 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public UrlModel GenerateShortUrl(String originalUrl) {
+        if(originalUrl == null)
+            throw new IllegalArgumentException();
+
         if(!validateUrl(originalUrl))
             throw new IllegalArgumentException();
 
