@@ -19,9 +19,6 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public UrlModel GenerateShortUrl(String originalUrl) {
-        if(originalUrl == null)
-            throw new IllegalArgumentException();
-
         if(!validateUrl(originalUrl))
             throw new IllegalArgumentException();
 
@@ -47,6 +44,9 @@ public class UrlServiceImpl implements UrlService {
     }
 
     private boolean validateUrl(String url) {
+        if(url == null)
+            return false;
+
         String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url);
