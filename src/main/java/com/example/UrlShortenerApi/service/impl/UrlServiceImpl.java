@@ -14,18 +14,18 @@ import java.util.regex.Pattern;
 
 @Service
 public class UrlServiceImpl implements UrlService {
+
     @Autowired
     UrlRepository urlRepository;
 
-    @Override
-    public UrlModel GenerateShortUrl(String originalUrl) {
-        if(!validateUrl(originalUrl))
+    public UrlModel generateShortUrl(String originalUrl) {
+        if(!validateUrl(originalUrl) || originalUrl == null)
             throw new IllegalArgumentException();
 
         String newShortUrl;
 
         do {
-            newShortUrl = generateShortUrl();
+            newShortUrl = generateRandomUrl();
         } while (urlRepository.findByShortUrl(newShortUrl).isPresent());
 
         UrlModel url = new UrlModel();
@@ -44,9 +44,6 @@ public class UrlServiceImpl implements UrlService {
     }
 
     private boolean validateUrl(String url) {
-        if(url == null)
-            return false;
-
         String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url);
@@ -54,7 +51,9 @@ public class UrlServiceImpl implements UrlService {
         return matcher.find();
     }
 
-    private String generateShortUrl() {
+    private String generateRandomUrl() {
         return RandomStringUtils.randomAlphanumeric(5, 10);
     }
+
+
 }

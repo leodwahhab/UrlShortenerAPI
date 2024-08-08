@@ -2,9 +2,10 @@ package com.example.UrlShortenerApi.controller;
 
 import com.example.UrlShortenerApi.domain.UrlModel;
 import com.example.UrlShortenerApi.domain.dto.UrlDTO;
+import com.example.UrlShortenerApi.service.QrCodeService;
 import com.example.UrlShortenerApi.service.UrlService;
+import com.google.zxing.WriterException;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +15,25 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/url")
+@CrossOrigin(origins = "*")
 public class UrlController {
     @Autowired
     UrlService urlService;
 
+    @Autowired
+    QrCodeService qrCodeService;
+
     @PostMapping()
-    public ResponseEntity<UrlDTO> generateShortUrl(@PathParam("url") String originalUrl) {
-        UrlModel urlModel = urlService.GenerateShortUrl(originalUrl);
+    public ResponseEntity<UrlDTO> generateShortUrl(@RequestParam("url") String url) throws IOException, WriterException {
+        UrlModel urlModel = urlService.generateShortUrl(url);
         String domainUrl = "http://localhost:8080/url/";
         String shortUrl = domainUrl + urlModel.getShortUrl();
+        String qrCode = qrCodeService.generateQrCode(shortUrl);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new UrlDTO(
                 shortUrl,
-                urlModel.getOriginalUrl()
+                urlModel.getOriginalUrl(),
+                qrCode
         ));
     }
 
